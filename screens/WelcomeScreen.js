@@ -7,8 +7,10 @@ import {
   Image,
   Alert,
   Dimensions,
+  ActivityIndicator,
 } from "react-native";
 import { Button } from "react-native-elements";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SLIDE_DATA = [
@@ -30,9 +32,31 @@ const SLIDE_DATA = [
 ];
 
 class WelcomeScreen extends React.Component {
-  onStartButtonPress = () => {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      isInitialized: null,
+    };
+  }
+
+  onStartButtonPress = async () => {
+    // `AsyncStorage`に『ウェルカム画面表示済み』という情報を保存する
+    await AsyncStorage.setItem("isInitialized", "true");
     this.props.navigation.navigate("main");
   };
+
+  async componentDidMount() {
+    let isInitializedString = await AsyncStorage.getItem("isInitialized");
+
+    // もし`AsyncStorage`の'isInitialized'から読み込んだ情報が'true'だったら
+    if (isInitializedString === "true") {
+      this.setState({ isInitialized: true });
+      this.props.navigation.navigate("main");
+    } else {
+      this.setState({ isInitialized: false });
+    }
+  }
 
   renderLastButton(index) {
     if (index === SLIDE_DATA.length - 1) {
@@ -68,6 +92,10 @@ class WelcomeScreen extends React.Component {
   }
 
   render() {
+    if (this.state.isInitialized === null) {
+      return <ActivityIndicator size="large" />;
+    }
+
     return (
       <ScrollView horizontal pagingEnabled style={{ flex: 1 }}>
         {this.renderSlides()}
