@@ -1,9 +1,13 @@
-const FETCH_ALL_REVIEWS = "fetch_all_reviews";
+import { FETCH_ALL_REVIEWS, SELECT_DETAIL_REVIEW } from "./types";
 
 // Action creator を作成
 export const fetchAllReviews = () => {
   // Reducerに渡す`type`と`payload`を指定
   return { type: FETCH_ALL_REVIEWS, payload: allReviewsTmp };
+};
+
+export const selectDetailReview = (selectedReview) => {
+  return { type: SELECT_DETAIL_REVIEW, payload: selectedReview };
 };
 
 const GREAT = "sentiment-very-satisfied";
@@ -23,9 +27,9 @@ const allReviewsTmp = [
     rank: GREAT,
   },
   {
-    country: "USA",
-    dateFrom: "Jan/15/2021",
-    dateTo: "Jan/25/2021",
+    country: "Japan",
+    dateFrom: "Jan/06/2021",
+    dateTo: "Jan/11/2021",
     imageURIs: [
       require("../assets/add_image_placeholder.png"),
       require("../assets/add_image_placeholder.png"),
@@ -34,9 +38,9 @@ const allReviewsTmp = [
     rank: GOOD,
   },
   {
-    country: "USA",
-    dateFrom: "Jan/15/2021",
-    dateTo: "Jan/25/2021",
+    country: "China",
+    dateFrom: "Jan/15/2020",
+    dateTo: "Jan/25/2020",
     imageURIs: [
       require("../assets/add_image_placeholder.png"),
       require("../assets/add_image_placeholder.png"),

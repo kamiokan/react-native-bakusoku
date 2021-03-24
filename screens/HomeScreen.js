@@ -34,6 +34,9 @@ class HomeScreen extends React.Component {
   }
 
   onListItemPress = (selectedReview) => {
+    // Action creatorを発動する
+    this.props.selectDetailReview(selectedReview);
+
     this.props.navigation.navigate("detail");
   };
 
