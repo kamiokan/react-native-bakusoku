@@ -4,6 +4,9 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Provider } from "react-redux";
+
+import store from "./store";
 
 import WelcomeScreen from "./screens/WelcomeScreen";
 import HomeScreen from "./screens/HomeScreen";
@@ -152,10 +155,12 @@ const NavigationTab = () => {
 export default class App extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
-        <StatusBar barStyle="light-content" />
-        <NavigationTab />
-      </View>
+      <Provider store={store}>
+        <View style={styles.container}>
+          <StatusBar barStyle="light-content" />
+          <NavigationTab />
+        </View>
+      </Provider>
     );
   }
 }
