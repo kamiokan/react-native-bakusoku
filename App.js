@@ -1,8 +1,9 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Platform, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 
 import WelcomeScreen from "./screens/WelcomeScreen";
 import HomeScreen from "./screens/HomeScreen";
@@ -15,15 +16,35 @@ import Setting2Screen from "./screens/Setting2Screen";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+const headerNavigationOptions = {
+  headerStyle: {
+    backgroundColor: "deepskyblue",
+    marginTop: Platform.OS === "android" ? 24 : 0,
+  },
+  headerTitleStyle: { color: "white" },
+  headerTintColor: "white",
+};
+
 const HomeStack = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="home"
         component={HomeScreen}
-        options={{ headerShown: false }}
+        options={{
+          ...headerNavigationOptions,
+          headerTitle: "Treco",
+          headerLeft: () => null,
+        }}
       />
-      <Stack.Screen name="detail" component={DetailScreen} />
+      <Stack.Screen
+        name="detail"
+        component={DetailScreen}
+        options={{
+          ...headerNavigationOptions,
+          headerTitle: "Detail",
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -46,20 +67,69 @@ const ProfileStack = () => {
       <Stack.Screen
         name="profile"
         component={ProfileScreen}
-        options={{ headerShown: false }}
+        options={{
+          ...headerNavigationOptions,
+          headerTitle: "Profile",
+          headerLeft: () => null,
+        }}
       />
-      <Stack.Screen name="setting1" component={Setting1Screen} />
-      <Stack.Screen name="setting2" component={Setting2Screen} />
+      <Stack.Screen
+        name="setting1"
+        component={Setting1Screen}
+        options={{
+          ...headerNavigationOptions,
+          headerTitle: "Setting 1",
+        }}
+      />
+      <Stack.Screen
+        name="setting2"
+        component={Setting2Screen}
+        options={{
+          ...headerNavigationOptions,
+          headerTitle: "Setting 2",
+        }}
+      />
     </Stack.Navigator>
   );
 };
 
 const MainTab = () => {
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="home" component={HomeStack} />
-      <Tab.Screen name="add" component={AddStack} />
-      <Tab.Screen name="profile" component={ProfileStack} />
+    <Tab.Navigator
+      tabBarOptions={{
+        activeTintColor: "deepskyblue",
+      }}
+    >
+      <Tab.Screen
+        name="home"
+        component={HomeStack}
+        options={{
+          tabBarLabel: "僕たちのHOME",
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="home" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="add"
+        component={AddStack}
+        options={{
+          tabBarLabel: "追加すんよ",
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="plus-circle" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="profile"
+        component={ProfileStack}
+        options={{
+          tabBarLabel: "設定",
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="account" size={size} color={color} />
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 };
@@ -83,6 +153,7 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <StatusBar barStyle="light-content" />
         <NavigationTab />
       </View>
     );
