@@ -1,7 +1,16 @@
+import Geocoder from "react-native-geocoding";
 import React from "react";
-import { Text, View, ScrollView, Dimensions, Platform } from "react-native";
+import {
+  Text,
+  View,
+  ScrollView,
+  ActivityIndicator,
+  Dimensions,
+  Platform,
+} from "react-native";
 import MapView from "react-native-maps";
 import { connect } from "react-redux";
+import { GEOCODING_API_KEY } from "../config/development"; // 本番環境では config/product.js を読み込ませる
 
 import * as actions from "../actions";
 
@@ -13,6 +22,7 @@ class DetailScreen extends React.Component {
     super(props);
 
     this.state = {
+      isMapLoaded: false, // 地図読み込み未完了
       initialRegion: {
         latitude: 35.709, // 東京都の緯度
         longitude: 139.732, // 東京都の経度
@@ -22,7 +32,34 @@ class DetailScreen extends React.Component {
     };
   }
 
+  async componentDidMount() {
+    Geocoder.init(GEOCODING_API_KEY);
+
+    // Google map APIを使用して国名から緯度経度へ変換
+    // 非同期処理張本人の文頭には`await`を付ける
+    let result = await Geocoder.from(this.props.detailReview.country);
+
+    // 変換結果を用いて`this.state`を更新
+    this.setState({
+      isMapLoaded: true, // 地図読み込み完了
+      initialRegion: {
+        latitude: result.results[0].geometry.location.lat, // 変換後の緯度
+        longitude: result.results[0].geometry.location.lng, // 変換後の経度
+        latitudeDelta: MAP_ZOOM_RATE, // 値自体は変わっていないが書く必要あり
+        longitudeDelta: MAP_ZOOM_RATE * 2.25, // 値自体は変わっていないが書く必要あり
+      },
+    });
+  }
+
   render() {
+    if (this.state.isMapLoaded === false) {
+      return (
+        <View style={{ flex: 1, justifyContent: "center" }}>
+          <ActivityIndicator size="large" />
+        </View>
+      );
+    }
+
     return (
       <View style={{ flex: 1 }}>
         <ScrollView>

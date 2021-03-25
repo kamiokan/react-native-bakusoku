@@ -1,0 +1,1 @@
+export const GEOCODING_API_KEY = "YOUR SECRET API KEY";
